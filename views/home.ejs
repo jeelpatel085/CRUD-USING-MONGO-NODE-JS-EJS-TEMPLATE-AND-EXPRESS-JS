@@ -1,0 +1,87 @@
+<%- include('layouts/header')%>
+
+
+<div class="container-fluid" style="margin-top: 20px;">
+    <table class="table" id="table" class="display">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Image</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile No</th>
+            <th scope="col">Action</th>            
+          </tr> 
+        </thead>
+        <tbody>
+
+          <%   user.forEach((row,index)=>{  %>
+
+          <tr>
+
+            <th><%= index %></th>
+            <td><img src="<%= row.file %>" width="50px"></img></td>
+            <td><%= row.name %></td>
+            <td><%= row.email %></td>
+            <td><%= row.mobileno %></td>
+
+            <td>
+              <a href="/edit/<%= row._id  %>" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="for edit" class="text-success"><span style='font-size:24px'>✎</span></a>
+              <a href="/delete/<%= row._id %>" class="text-danger"><span style='font-size:24px'>🗑</span></a>
+            </td>
+              
+          </tr>
+
+          <% }) %>
+        
+        </tbody>
+      </table>
+      
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let table = $('#table').DataTable({
+      ajax: '/abc',
+      columns: [
+        { data: 'name', title: 'Name', editable: true },
+        { data: 'email', title: 'Email', editable: true },
+        { data: 'mobileno', title: 'Mobile No', editable: true }
+      ],
+      select: true,
+      dom: 'Bfrtip',
+      buttons: ['copy', 'excel', 'pdf', 'print']
+    });
+
+    let editor = new $.fn.dataTable.Editor({
+      ajax: '/abc',
+      table: '#table',
+      fields: [
+        { label: 'Name:', name: 'name' },
+        { label: 'Email:', name: 'email' },
+        { label: 'Mobile No:', name: 'mobileno' }
+      ]
+    });
+
+    $('#table').on('click', 'tbody td', function (e) {
+      editor.inline(this);
+    });
+  });
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+
+
+</script>
+
+
+
+
+
+<%- include('layouts/footer')%>
